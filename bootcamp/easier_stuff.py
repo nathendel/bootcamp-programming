@@ -115,6 +115,12 @@ def go_aspect(aspect):
 # map from a GOID (e.g. GO:0005737) to a *tuple* of the term, aspect, and term definition
 # e.g. 'GO:0005737' -> ('cytoplasm', 'C', 'All of the contents of a cell... (etc)'
 def go_info(goid):
+    with open(GENE_INFO) as csvfile:
+	reader = csv.DictReader(csvfile, delimiter='\t')
+	for row in reader:
+		if row['goid']=="%s" % goid:
+			goid_tup = (row['go_term'], row['go_aspect'], row['go_definition'])
+	return goid_tup
 
 
 
