@@ -14,6 +14,7 @@
 # (don't delete this but don't worry about it either)
 import os # a built-in module, for dealing with filenames
 from . import app # this is part of the website guts
+import csv
 
 
 
@@ -42,8 +43,13 @@ EXPERIMENT_FILE = os.path.join(app.root_path, 'data', 'experiment_data.txt')
 #       [('YAL001C', -0.58), ('YAL002W', 0.23), ('YAL003W', -0.25), ... ],
 #        ... ]
 def experiment():
-    pass
-
+	experiment_list=[]
+	with open(EXPERIMENT_FILE) as csvfile:
+		reader = csv.DictReader(csvfile, delimiter='\t')
+		for i in range(0, 32):
+			for row in reader:
+				experiment_list.append([row[''], row[str(i)]])
+	return experiment_list
 
 # map from a gene's systematic name to its standard name
 # e.g. gene_name('YGR188C') returns 'BUB1'
@@ -55,7 +61,14 @@ def gene_name(gene):
 # across all of the experiments.
 # e.g. gene_data('YGR188C') returns [-0.09, 0.2, -0.07, ... ]
 def gene_data(gene):
-    pass
+    data_list=[]
+	with open(EXPERIMENT_FILE) as csvfile:
+		reader = csv.DictReader(csvfile, delimiter='\t')
+		for row in reader:
+			if row['']=="%s" % gene:
+				for i in range(0,32):
+					data_list.append(float(row[str(i)]))
+	return data_list
 
 
 # map from a systematic name to some info about the gene (whatever you want),
@@ -67,7 +80,13 @@ def gene_info(gene):
 # map from a systematic name to a list of GOIDs that the gene is associated with
 # e.g. 'YGR188C' -> ['GO:0005694', 'GO:0000775', 'GO:0000778', ... ]
 def gene_to_go(gene):
-    pass
+    goid_list=[]
+	with open(GO_MEMBERSHIP) as csvfile:
+		reader = csv.DictReader(csvfile, delimiter='\t')
+		for row in reader:
+			if row['systematic_name']=="%s" % gene:
+				goid_list.append(str(row['goid']))
+	return goid_list
 
 
 # map from one of the GO aspects (P, F, and C, for Process, Function, Component),
@@ -80,11 +99,22 @@ def go_aspect(aspect):
 # map from a GOID (e.g. GO:0005737) to a *tuple* of the term, aspect, and term definition
 # e.g. 'GO:0005737' -> ('cytoplasm', 'C', 'All of the contents of a cell... (etc)'
 def go_info(goid):
-    pass
+    with open(GENE_INFO) as csvfile:
+	reader = csv.DictReader(csvfile, delimiter='\t')
+	for row in reader:
+		if row['goid']=="%s" % goid:
+			goid_tup = (row['go_term'], row['go_aspect'], row['go_definition'])
+	return goid_tup
 
 
 # the reverse of the gene_to_go function: map from a GOID
 # to a list of genes (systematic names)
 # e.g. 'GO:0005737' -> ['YAL001C', 'YAL002W', 'YAL003W', ... ]
 def go_to_gene(goid):
-    pass
+    goid_rev_list=[]
+	with open(GO_MEMBERSHIP) as csvfile:
+		reader = csv.DictReader(csvfile, delimiter='\t')
+		for row in reader:
+			if row['goid']=="%s" % goid:
+				goid_rev_list.append(str(row['systematic_name']))
+	return goid_rev_list
