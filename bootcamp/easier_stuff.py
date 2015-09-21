@@ -81,17 +81,17 @@ def gene_data(gene):
 def gene_info(gene):
 	with open(EXPERIMENT_FILE) as z:
 		for line in z.readlines():
-		cols = line.split('\t')
-		qualities = cols[2].split(';')
-		if cols[0] == gene:
-			return qualities[0]
+			cols = line.split('\t')
+			qualities = cols[2].split(';')
+			if cols[0] == gene:
+				return qualities[0]
 
 
 
 # map from a systematic name to a list of GOIDs that the gene is associated with
 # e.g. 'YGR188C' -> ['GO:0005694', 'GO:0000775', 'GO:0000778', ... ]
 def gene_to_go(gene):
-    goid_list=[]
+	goid_list=[]
 	with open(GO_MEMBERSHIP) as csvfile:
 		reader = csv.DictReader(csvfile, delimiter='\t')
 		for row in reader:
@@ -128,7 +128,7 @@ def go_info(goid):
 # to a list of genes (systematic names)
 # e.g. 'GO:0005737' -> ['YAL001C', 'YAL002W', 'YAL003W', ... ]
 def go_to_gene(goid):
-    goid_rev_list=[]
+	goid_rev_list=[]
 	with open(GO_MEMBERSHIP) as csvfile:
 		reader = csv.DictReader(csvfile, delimiter='\t')
 		for row in reader:
