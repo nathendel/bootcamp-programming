@@ -104,18 +104,18 @@ def gene_to_go(gene):
 # to a list of all the GOIDs in that aspect
 # e.g. 'C' -> ['GO:0005737', 'GO:0005761', 'GO:0005763', ... ]
 def go_aspect(aspect):
-    pass
-
-
-# map from a GOID (e.g. GO:0005737) to a *tuple* of the term, aspect, and term definition
-# e.g. 'GO:0005737' -> ('cytoplasm', 'C', 'All of the contents of a cell... (etc)'
-def go_info(goid):
-	with open(EXPERIMENT_FILE) as z:
+    	with open(GO_INFO) as z:
 		for line in z.readlines():
 		cols = line.split('\t')
 		if cols[2] == goid:
 			prop_list.append(cols[0])
 		return prop_list
+
+
+# map from a GOID (e.g. GO:0005737) to a *tuple* of the term, aspect, and term definition
+# e.g. 'GO:0005737' -> ('cytoplasm', 'C', 'All of the contents of a cell... (etc)'
+def go_info(goid):
+
 
 
 # the reverse of the gene_to_go function: map from a GOID
