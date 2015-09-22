@@ -81,10 +81,10 @@ def gene_data(gene):
 def gene_info(gene):
 	with open(EXPERIMENT_FILE) as z:
 		for line in z.readlines():
-		cols = line.split('\t')
-		qualities = cols[2].split(';')
-		if cols[0] == gene:
-			return qualities[0]
+			cols = line.split('\t')
+			qualities = cols[2].split(';')
+			if cols[0] == gene:
+				return qualities[0]
 
 
 
@@ -104,22 +104,22 @@ def gene_to_go(gene):
 # to a list of all the GOIDs in that aspect
 # e.g. 'C' -> ['GO:0005737', 'GO:0005761', 'GO:0005763', ... ]
 def go_aspect(aspect):
-    	with open(GO_INFO) as z:
+    with open(GO_INFO) as z:
 		for line in z.readlines():
-		cols = line.split('\t')
-		if cols[2] == goid:
-			prop_list.append(cols[0])
-		return prop_list
+			cols = line.split('\t')
+			if cols[2] == goid:
+				prop_list.append(cols[0])
+	return prop_list
 
 
 # map from a GOID (e.g. GO:0005737) to a *tuple* of the term, aspect, and term definition
 # e.g. 'GO:0005737' -> ('cytoplasm', 'C', 'All of the contents of a cell... (etc)'
 def go_info(goid):
     with open(GENE_INFO) as csvfile:
-	reader = csv.DictReader(csvfile, delimiter='\t')
-	for row in reader:
-		if row['goid']=="%s" % goid:
-			goid_tup = (row['go_term'], row['go_aspect'], row['go_definition'])
+		reader = csv.DictReader(csvfile, delimiter='\t')
+		for row in reader:
+			if row['goid']=="%s" % goid:
+				goid_tup = (row['go_term'], row['go_aspect'], row['go_definition'])
 	return goid_tup
 
 
