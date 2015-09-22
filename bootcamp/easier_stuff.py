@@ -109,11 +109,11 @@ def gene_to_go(gene):
 # e.g. 'C' -> ['GO:0005737', 'GO:0005761', 'GO:0005763', ... ]
 def go_aspect(aspect):
 	prop_list = []
-	with open(GO_INFO) as z:
-		for line in z.readlines():
-			cols = line.split('\t')
-			if cols[2] == 'goid':
-				prop_list.append(cols[0])
+	with open(GO_INFO) as csvfile:
+		reader = csv.DictReader(csvfile, delimiter='\t')
+		for row in reader:
+			if row['go_aspect']=="%s" % aspect:
+				prop_list.append(str(row['goid']))
 	return prop_list
 
 # map from a GOID (e.g. GO:0005737) to a *tuple* of the term, aspect, and term definition
