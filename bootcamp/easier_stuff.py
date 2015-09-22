@@ -39,16 +39,20 @@ EXPERIMENT_FILE = os.path.join(app.root_path, 'data', 'experiment_data.txt')
 
 # return a list or dictionary that maps from the id of an experiment (an int: 0, 1, ..)
 # to a list of (systematic name, fold-change value) tuples
-# e.g. [[('YAL001C', -0.06), ('YAL002W', -0.3), ('YAL003W', -0.07), ... ],
-#       [('YAL001C', -0.58), ('YAL002W', 0.23), ('YAL003W', -0.25), ... ],
+# e.g. [ [('YAL001C', -0.06), ('YAL002W', -0.3), ('YAL003W', -0.07), ... ],
+#        [('YAL001C', -0.58), ('YAL002W', 0.23), ('YAL003W', -0.25), ... ],
 #        ... ]
 def experiment():
 	experiment_list=[]
+	experiment=[]
+	for j in range(0,32):
+		experiment_list.append([])
 	with open(EXPERIMENT_FILE) as csvfile:
 		reader = csv.DictReader(csvfile, delimiter='\t')
 		for i in range(0, 32):
 			for row in reader:
-				experiment_list.append([row[''], row[str(i)]])
+				experiment.append((row[''], float(row[str(i)])))
+			experiment_list.insert(i, experiment)
 	return experiment_list
     
 
@@ -105,10 +109,11 @@ def gene_to_go(gene):
 # to a list of all the GOIDs in that aspect
 # e.g. 'C' -> ['GO:0005737', 'GO:0005761', 'GO:0005763', ... ]
 def go_aspect(aspect):
+	prop_list = []
 	with open(GO_INFO) as z:
 		for line in z.readlines():
 			cols = line.split('\t')
-			if cols[2] == goid:
+			if cols[2] == 'goid':
 				prop_list.append(cols[0])
 	return prop_list
 
