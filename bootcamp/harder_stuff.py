@@ -33,8 +33,46 @@ import matplotlib.pyplot
 #
 def calculate_enrichment(gene_data, go_to_genes, n=100):
     # You need to replace this with something useful
+    sorted_gene_data = gene_data.sort(key = lambda x:x[1]) #sorts gene data list by gene value (low to high)
+    gene_data_bottom = sorted_gene_data[:n] #takes the n lowest scores
+    gene_data_top = sorted_gene_data[-n:] #takes the n highest scores
+    bottomThreshold = sorted_gene_data[n][1] #finds the score required to qualify for the n lowest scores
+    topThreshold = sorted_gene_data[-n][1] #finds the score required to qualify for the n highest scores
+    
+    GOIDenrichscores = []
+    
+    numberofGenes = len(gene_data) #total number of genes
+    
     positive_enrichment_scores = []
     negative_enrichment_scores = []
+    
+    
+    for goid in go_to_genes: #iterate over different GOIDs, find how many genes have each GOID and how many genes in the upper and lower score list have each GOID
+    	numberwithGOID = len(go_to_genes[goid])	
+    	numberwithGOID_bottomScores = [genetuple[1] for genetuple in gene_data if genetuple[1] < bottomThreshold
+    	numberwithGOID_bottom = len(numberwithGOID_bottomScores)
+    	
+    	numberwithGOID_topScores = [genetuple[1] for genetuple in gene_data if genetuple[1] > topThreshold
+    	numberwithGOID_top = len(numberwithGOID_topScores)
+    	
+    	# Calculate enrichment scores. logsf returns the log of the survival function (see scipy reference link above)
+    	positive_enrichment_scores.append(scipy.stats.hypergeom.logsf(numberwithGOID_top, numberofGenes, numberwithGOID, n))
+    	negative_enrichment_scores.append(scipy.stats.hypergeom.logsf(numberwithGOID_bottom, numberofGenes, numberwithGOID, n))
+    	    	
+    	#x is the number of genes with a certain GOID in the top n genes
+    	#n is the total number of genes with a certain GOID
+    	
+    
+
+    # geneValuesByGOID = []
+#     scores = []
+#     for goid in go_to_genes:
+#     	goidscores = []
+#     	for gene in go_to_genes[goid]:
+#     		goidscores.append([genetuple[1] for genetuple in gene_data if genetuple[0] == gene])
+#     	scores.append((goid,goidscores))
+#     		
+    
 
     return positive_enrichment_scores,negative_enrichment_scores
 
