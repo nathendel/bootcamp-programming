@@ -44,16 +44,15 @@ EXPERIMENT_FILE = os.path.join(app.root_path, 'data', 'experiment_data.txt')
 #        ... ]
 def experiment():
 	experiment_list=[]
-	experiment=[]
 	for j in range(0,32):
 		experiment_list.append([])
 	with open(EXPERIMENT_FILE) as csvfile:
 		reader = csv.DictReader(csvfile, delimiter='\t')
-		for i in range(0, 32):
-			for row in reader:
-				experiment.append((row[''], float(row[str(i)])))
-			experiment_list.insert(i, experiment)
+		for row in reader:
+		    for i in range(0, 32):
+				experiment_list[i].append((row[''], float(row[str(i)])))
 	return experiment_list
+
     
 
 
